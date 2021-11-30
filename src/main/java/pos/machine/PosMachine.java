@@ -7,9 +7,18 @@ import java.util.stream.Collectors;
 
 public class PosMachine {
     public String printReceipt(List<String> barcodes) {
+        List<SingleItem> itemsWithDetail = convertToItems(barcodes);
+        int totalPrice = calculateTotal(itemsWithDetail);
+        System.out.println(totalPrice);
         return null;
     }
-
+    private Integer calculateTotal(List<SingleItem> itemsWithDetail){
+        int totalPrice = 0;
+        for (SingleItem item : itemsWithDetail) {
+            totalPrice += item.getSubTotal();
+        }
+        return totalPrice;
+    }
     private List<ItemInfo> loadAllItemsInfo(){
         return ItemDataLoader.loadAllItemInfos();
     }
