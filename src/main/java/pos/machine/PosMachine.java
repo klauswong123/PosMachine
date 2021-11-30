@@ -9,9 +9,9 @@ public class PosMachine {
     public String printReceipt(List<String> barcodes) {
         List<SingleItem> itemsWithDetail = convertToItems(barcodes);
         int totalPrice = calculateTotal(itemsWithDetail);
-        String result = formatOutput(itemsWithDetail, totalPrice);
-        System.out.println(result);
-        return result;
+        String printBarcodeInfo = formatOutput(itemsWithDetail, totalPrice);
+        System.out.println(printBarcodeInfo);
+        return printBarcodeInfo;
     }
     private Integer calculateTotal(List<SingleItem> itemsWithDetail){
         int totalPrice = 0;
@@ -20,6 +20,7 @@ public class PosMachine {
         }
         return totalPrice;
     }
+
     private List<ItemInfo> loadAllItemsInfo(){
         return ItemDataLoader.loadAllItemInfos();
     }
@@ -31,13 +32,17 @@ public class PosMachine {
         result = result+"----------------------\n"+"Total: "+totalPrice+" (yuan)\n**********************";
         return result;
     }
+
+    private List<String> uniqueBarcode(List<String> barcodes){
+        return barcodes.stream()
+                .distinct()
+                .collect(Collectors.toList());
+    }
     private List<SingleItem> convertToItems(List<String> barcodes) {
         List<ItemInfo> itemDetailList = loadAllItemsInfo();
         List<SingleItem> itemList = new ArrayList<>();
-        List<String> distinctBarcodes = barcodes.stream()
-                .distinct()
-                .collect(Collectors.toList());
-        for (String barcode : distinctBarcodes) {
+        List<String> uniqueBarcode = uniqueBarcode(barcodes);
+        for (String barcode : uniqueBarcode) {
             for (ItemInfo itemInfo : itemDetailList) {
                 if (barcode.equals(itemInfo.getBarcode())) {
                     int quantity = Collections.frequency(barcodes, barcode);
