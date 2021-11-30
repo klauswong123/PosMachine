@@ -1,0 +1,10 @@
+pos/machine/ItemInfo.java
+ pos.machine.ItemInfo
+pos/machine/ItemDataLoader.java
+ pos.machine.ItemDataLoader
+pos/machine/SingleItem.java
+ pos.machine.SingleItem
+pos/machine/Main.java
+ pos.machine.Main
+pos/machine/PosMachine.java
+ pos.machine.PosMachine
