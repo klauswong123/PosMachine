@@ -9,11 +9,9 @@ public class PosMachine {
     public String printReceipt(List<String> barcodes) {
         List<SingleItem> itemsWithDetail = convertToItems(barcodes);
         int totalPrice = calculateTotal(itemsWithDetail);
-        String printBarcodeInfo = formatOutput(itemsWithDetail, totalPrice);
-        System.out.println(printBarcodeInfo);
-        return printBarcodeInfo;
+        return formatOutput(itemsWithDetail, totalPrice);;
     }
-    private Integer calculateTotal(List<SingleItem> itemsWithDetail){
+    private int calculateTotal(List<SingleItem> itemsWithDetail){
         int totalPrice = 0;
         for (SingleItem item : itemsWithDetail) {
             totalPrice += item.getSubTotal();
@@ -27,9 +25,10 @@ public class PosMachine {
     private String formatOutput(List<SingleItem> itemsWithDetail, Integer totalPrice){
         String result = "***<store earning no money>Receipt***\n";
         for (SingleItem itemInfo : itemsWithDetail) {
-            result = result+"Name: "+itemInfo.getName()+", Quantity: "+itemInfo.getQuantity()+", Unit price: "+itemInfo.getUnitPrice()+" (yuan), Subtotal: "+itemInfo.getSubTotal()+" (yuan)\n";
+            result = result.concat(String.format("Name: %s , Quantity: %d, Unit price: %d (yuan), Subtotal: %d (yuan)\n",
+                    itemInfo.getName(),itemInfo.getQuantity(),itemInfo.getUnitPrice(),itemInfo.getSubTotal()));
         }
-        result = result+"----------------------\n"+"Total: "+totalPrice+" (yuan)\n**********************";
+        result = result.concat(String.format("----------------------\nTotal:  %d(yuan)\n**********************",totalPrice));
         return result;
     }
 
