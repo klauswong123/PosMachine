@@ -1,13 +1,13 @@
 package pos.machine;
 
-
-public class SingleItem {
+//rename class
+public class ItemWithDetail {
     private final String name;
     private final int quantity;
     private final int unitPrice;
     private final int subTotal;
 
-    public SingleItem(String name, int quantity, int unitPrice, int subTotal) {
+    public ItemWithDetail(String name, int quantity, int unitPrice, int subTotal) {
         this.name = name;
         this.quantity = quantity;
         this.unitPrice = unitPrice;

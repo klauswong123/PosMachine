@@ -7,13 +7,13 @@ import java.util.stream.Collectors;
 
 public class PosMachine {
     public String printReceipt(List<String> barcodes) {
-        List<SingleItem> itemsWithDetail = convertToItems(barcodes);
+        List<ItemWithDetail> itemsWithDetail = convertToItems(barcodes);
         int totalPrice = calculateTotal(itemsWithDetail);
-        return formatOutput(itemsWithDetail, totalPrice);;
+        return printBarcodeInfo(itemsWithDetail, totalPrice);
     }
-    private int calculateTotal(List<SingleItem> itemsWithDetail){
+    private int calculateTotal(List<ItemWithDetail> itemsWithDetail){
         int totalPrice = 0;
-        for (SingleItem item : itemsWithDetail) {
+        for (ItemWithDetail item : itemsWithDetail) {
             totalPrice += item.getSubTotal();
         }
         return totalPrice;
@@ -22,13 +22,14 @@ public class PosMachine {
     private List<ItemInfo> loadAllItemsInfo(){
         return ItemDataLoader.loadAllItemInfos();
     }
-    private String formatOutput(List<SingleItem> itemsWithDetail, Integer totalPrice){
+    //TODO: rename class formatOutput
+    private String printBarcodeInfo(List<ItemWithDetail> itemsWithDetail, Integer totalPrice){
         String result = "***<store earning no money>Receipt***\n";
-        for (SingleItem itemInfo : itemsWithDetail) {
-            result = result.concat(String.format("Name: %s , Quantity: %d, Unit price: %d (yuan), Subtotal: %d (yuan)\n",
+        for (ItemWithDetail itemInfo : itemsWithDetail) {
+            result = result.concat(String.format("Name: %s, Quantity: %d, Unit price: %d (yuan), Subtotal: %d (yuan)\n",
                     itemInfo.getName(),itemInfo.getQuantity(),itemInfo.getUnitPrice(),itemInfo.getSubTotal()));
         }
-        result = result.concat(String.format("----------------------\nTotal:  %d(yuan)\n**********************",totalPrice));
+        result = result.concat(String.format("----------------------\nTotal: %d (yuan)\n**********************",totalPrice));
         return result;
     }
 
@@ -37,9 +38,9 @@ public class PosMachine {
                 .distinct()
                 .collect(Collectors.toList());
     }
-    private List<SingleItem> convertToItems(List<String> barcodes) {
+    private List<ItemWithDetail> convertToItems(List<String> barcodes) {
         List<ItemInfo> itemDetailList = loadAllItemsInfo();
-        List<SingleItem> itemList = new ArrayList<>();
+        List<ItemWithDetail> itemList = new ArrayList<>();
         List<String> uniqueBarcode = uniqueBarcode(barcodes);
         for (String barcode : uniqueBarcode) {
             for (ItemInfo itemInfo : itemDetailList) {
@@ -47,7 +48,7 @@ public class PosMachine {
                     int quantity = Collections.frequency(barcodes, barcode);
                     int unitPrice = itemInfo.getPrice();
                     int subTotal = calculateSubtotal(quantity, unitPrice);
-                    SingleItem item = new SingleItem(itemInfo.getName(), quantity, unitPrice, subTotal);
+                    ItemWithDetail item = new ItemWithDetail(itemInfo.getName(), quantity, unitPrice, subTotal);
                     itemList.add(item);
                 }
             }
